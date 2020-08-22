@@ -4,6 +4,8 @@ A lightweight clojure library designed to support connection and operations to e
 
 ## Usage
 
+[![Clojars Project](https://img.shields.io/clojars/v/etcd3-clojure.svg)](https://clojars.org/etcd3-clojure)
+
 - Basic example to use the library
 
 ```
