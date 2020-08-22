@@ -9,7 +9,7 @@
             [protojure.protobuf.serdes.complex :refer :all]
             [protojure.protobuf.serdes.utils :refer [tag-map]]
             [protojure.protobuf.serdes.stream :as stream]
-            [mvccpb :as mvccpb]
+            [etcd3-clojure.lib.mvccpb :as mvccpb]
             [etcd3-clojure.lib.etcdserverpb :as etcdserverpb]
             [clojure.set :as set]
             [clojure.spec.alpha :as s]))
