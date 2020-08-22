@@ -1,0 +1,65 @@
+version: '3.3'
+services:
+    etcd-01:
+        image: gcr.io/etcd-development/etcd:latest 
+        hostname: etcd-01
+        networks:
+            etcd_cluster_network:
+                ipv4_address: 10.0.0.2
+        environment:
+            TOKEN: token-01
+            CLUSTER_STATE: new
+            ALLOW_NONE_AUTHENTICATION: "yes"
+            CLUSTER: machine-1=http://10.0.0.2:2380,machine-2=http://10.0.0.3:2380,machine-3=http://10.0.0.4:2380
+        ports:
+            - 3379:2379
+            - 3380:2380
+        command: ["sh","-c","etcd --data-dir=data.etcd --name machine-1 \
+                    --initial-advertise-peer-urls http://10.0.0.2:2380 --listen-peer-urls http://10.0.0.2:2380 \
+                    --advertise-client-urls http://10.0.0.2:2379 --listen-client-urls http://10.0.0.2:2379 \
+                    --initial-cluster $${CLUSTER} \
+                    --initial-cluster-state $${CLUSTER_STATE} --initial-cluster-token $${TOKEN}"]
+    etcd-02:
+        image: gcr.io/etcd-development/etcd:latest 
+        hostname: etcd-02
+        networks:
+            etcd_cluster_network:
+                ipv4_address: 10.0.0.3
+        environment:
+            TOKEN: token-01
+            CLUSTER_STATE: new
+            ALLOW_NONE_AUTHENTICATION: "yes"
+            CLUSTER: machine-1=http://10.0.0.2:2380,machine-2=http://10.0.0.3:2380,machine-3=http://10.0.0.4:2380
+        ports:
+            - 4379:2379
+            - 4380:2380
+        command: ["sh","-c","etcd --data-dir=data.etcd --name machine-2 \
+                    --initial-advertise-peer-urls http://10.0.0.3:2380 --listen-peer-urls http://10.0.0.3:2380 \
+                    --advertise-client-urls http://10.0.0.3:2379 --listen-client-urls http://10.0.0.3:2379 \
+                    --initial-cluster $${CLUSTER} \
+                    --initial-cluster-state $${CLUSTER_STATE} --initial-cluster-token $${TOKEN}"]
+    etcd-03:
+        image: gcr.io/etcd-development/etcd:latest
+        hostname: etcd-03
+        networks:
+            etcd_cluster_network:
+                ipv4_address: 10.0.0.4
+        environment:
+            TOKEN: token-01
+            CLUSTER_STATE: new
+            ALLOW_NONE_AUTHENTICATION: "yes"
+            CLUSTER: machine-1=http://10.0.0.2:2380,machine-2=http://10.0.0.3:2380,machine-3=http://10.0.0.4:2380
+        ports:
+            - 5379:2379
+            - 5380:2380
+        command: ["sh","-c","etcd --data-dir=data.etcd --name machine-3 \
+                    --initial-advertise-peer-urls http://10.0.0.4:2380 --listen-peer-urls http://10.0.0.4:2380 \
+                    --advertise-client-urls http://10.0.0.4:2379 --listen-client-urls http://10.0.0.4:2379 \
+                    --initial-cluster $${CLUSTER} \
+                    --initial-cluster-state $${CLUSTER_STATE} --initial-cluster-token $${TOKEN}"]
+networks:
+    etcd_cluster_network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 10.0.0.0/16
