@@ -21,7 +21,6 @@ A lightweight clojure library designed to support connection and operations to e
                @(kv-client/Put conn {:key (.getBytes "yoro3") :value (.getBytes "ralle3")}))
 (.close pool)
 ```
-CLOJARS_bf432514fe91a928fdfa4bee546f13221a646ab95379b941f048c033d9db
 
 - Important points 
     - Protos under `resources` folder have been used to auto-generate GRPC stubs for etcd3
